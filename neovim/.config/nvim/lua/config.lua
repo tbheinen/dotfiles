@@ -124,7 +124,14 @@ telescope.setup({
   extensions = {
     file_browser = {
       -- Disables netrw and uses telescope-file-browser in its place.
-      hijack_netrw = true
+      hijack_netrw = true,
+      -- Group files and folders.
+      grouped = true,
+      -- Display folders on top.
+      sorting_strategy = 'ascending',
+      -- Do not display stats in the picker.
+      display_stat = false,
+      layout_config = { preview_width = 0.6 }
     },
   },
 })
