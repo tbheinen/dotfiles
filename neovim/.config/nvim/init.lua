@@ -170,7 +170,7 @@ require('lazy').setup({
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme('carbonfox')
+      vim.cmd.colorscheme('duskfox')
     end,
   },
 
@@ -310,11 +310,20 @@ require('lazy').setup({
         settings = {
           -- Disable in favour of Ruff's import organizer.
           pyright = { disableOrganizeImports = true },
-          -- Ignore all files for analysis to exclusively use Ruff for linting.
-          python = { analysis = { ignore = { '*' } } },
+          python = { analysis = { typeCheckingMode = 'standard' } },
         },
+        on_attach = function(client, _)
+          -- Disable formatting for Pyright in favour of Ruff.
+          client.server_capabilities.documentFormattingProvider = false
+        end,
       })
       vim.lsp.enable('pyright')
+      vim.lsp.config('ruff', {
+        on_attach = function(client, _)
+          -- Disable hover for Ruff in favour of Pyright.
+          client.server_capabilities.hoverProvider = false
+        end,
+      })
       vim.lsp.enable('ruff')
 
       -- Lua.
@@ -352,12 +361,6 @@ require('lazy').setup({
           map_lsp_key('grr', builtin.lsp_references, 'Find references')
           map_lsp_key('g0', builtin.lsp_document_symbols, 'Find document symbol')
           map_lsp_key('gW', builtin.lsp_dynamic_workspace_symbols, 'Find workspace symbol')
-
-          -- Disable hover for Ruff in favour of Pyright.
-          -- TODO: Check if this can be disabled in the server config itself.
-          if client and client.name == 'ruff' then
-            client.server_capabilities.hoverProvider = false
-          end
 
           -- Highlight symbols when the cursor is on them.
           if
@@ -405,7 +408,6 @@ require('lazy').setup({
         severity_sort = true,
         float = { border = 'rounded', source = 'if_many' },
         underline = true,
-        virtual_text = { source = 'if_many', severity = vim.diagnostic.severity.ERROR },
       })
     end,
   },
