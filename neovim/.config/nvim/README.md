@@ -3,7 +3,7 @@
 ## MacOS:
 
 ```bash
-brew install ripgrep fzf pyright ruff neovim
+brew install ripgrep fzf pyright ruff stylua neovim
 ```
 
 ## Linux (from AppImage):
