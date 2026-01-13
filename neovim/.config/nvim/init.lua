@@ -44,6 +44,7 @@ vim.o.showmode = false
 -- independent. See `:help 'clipboard'`
 vim.api.nvim_create_autocmd('UIEnter', {
   callback = function()
+    vim.g.clipboard = 'osc52'
     vim.o.clipboard = 'unnamedplus'
   end,
 })
