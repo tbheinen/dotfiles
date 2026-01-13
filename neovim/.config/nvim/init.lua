@@ -83,14 +83,14 @@ vim.keymap.set(
 )
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostic float' })
 
--- Maps <A-j>, <A-k>, <A-h>, <A-l> to navigate between windows in any modes.
+-- Maps <C-j>, <C-k>, <C-h>, <C-l> to navigate between windows in any modes.
 local function set_window_nav_key(mode, key, orig_prefix, window)
   local desc = 'Move focus to the ' .. window .. ' window'
-  vim.keymap.set(mode, '<A-' .. key .. '>', orig_prefix .. key, { desc = desc })
+  vim.keymap.set(mode, '<C-' .. key .. '>', orig_prefix .. key, { desc = desc })
 end
 
 for key, window in pairs({ h = 'left', j = 'lower', k = 'upper', l = 'right' }) do
-  set_window_nav_key({ 't', 'i' }, key, '<C-\\><C-n><C-w>', window)
+  set_window_nav_key({ 't' }, key, '<C-\\><C-n><C-w>', window)
   set_window_nav_key({ 'n' }, key, '<C-w>', window)
 end
 
