@@ -189,13 +189,6 @@ require('lazy').setup({
     opts = {},
   },
 
-  { -- Bufferline.
-    'akinsho/bufferline.nvim',
-    version = '*',
-    dependencies = 'nvim-tree/nvim-web-devicons',
-    opts = {},
-  },
-
   -- AI plugins.
   { -- Copilot. TODO: Try NES with Copilot LSP.
     'zbirenbaum/copilot.lua',
@@ -261,11 +254,11 @@ require('lazy').setup({
             case_mode = 'smart_case',
           },
           file_browser = {
+            theme = 'ivy',
             hijack_netrw = true,
             grouped = true,
             sorting_strategy = 'ascending',
             display_stat = false,
-            layout_config = { preview_width = 0.6 },
           },
           ['ui-select'] = {
             require('telescope.themes').get_dropdown({}),
@@ -276,9 +269,11 @@ require('lazy').setup({
       -- Load extensions.
       require('telescope').load_extension('fzf')
       require('telescope').load_extension('ui-select')
+      require('telescope').load_extension('file_browser')
 
       -- Keymaps for telescope.
       local builtin = require('telescope.builtin')
+      local extensions = require('telescope').extensions
       local telescope_dropdown = require('telescope.themes').get_dropdown({
         winblend = 10,
         previewer = false,
@@ -289,12 +284,15 @@ require('lazy').setup({
       end
       map_telescope_key('<leader>ff', builtin.find_files, 'Telescope find files')
       map_telescope_key('<leader>fg', builtin.live_grep, 'Telescope live grep')
-      map_telescope_key('<leader>fw', builtin.grep_string, 'Telescope word')
       map_telescope_key('<leader>fh', builtin.help_tags, 'Telescope help tags')
       map_telescope_key('<leader>fk', builtin.keymaps, 'Telescope keymaps')
       map_telescope_key('<leader>fq', builtin.diagnostics, 'Telescope diagnostics')
-      map_telescope_key('<leader>fs', builtin.current_buffer_fuzzy_find, 'Telescope current buffer')
-      map_telescope_key('<leader>ft', '<Cmd>Telescope file_browser<CR>', 'Telescope file browser')
+      map_telescope_key('<leader>f/', builtin.current_buffer_fuzzy_find, 'Telescope current buffer')
+      map_telescope_key(
+        '<leader>ft',
+        extensions.file_browser.file_browser,
+        'Telescope file browser'
+      )
       map_telescope_key('<leader>fb', function()
         builtin.buffers(telescope_dropdown)
       end, 'Telescope buffers')
@@ -404,7 +402,7 @@ require('lazy').setup({
       })
 
       -- Diagnostic Config.
-      -- See :help vim.diagnostic.Opts.
+      --  See :help vim.diagnostic.Opts.
       vim.diagnostic.config({
         severity_sort = true,
         float = { border = 'rounded', source = 'if_many' },
@@ -458,7 +456,7 @@ require('lazy').setup({
       vim.lsp.config('*', { capabilities = require('cmp_nvim_lsp').default_capabilities() })
       local cmp = require('cmp')
       return {
-        -- For now uses the built-in snippet engine.
+        -- For now uses the built-in snippet engine (default).
         mapping = cmp.mapping.preset.insert({
           ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
